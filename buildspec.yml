@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      #- echo Installing dependencies
+      #- pnpm install
+  pre_build:
+    commands:
+      # Execute code linting
+      # Execute static code analysis
+      # Execute tests
+      - echo Logging in to Amazon ECR...
+      - echo $(aws ecr get-login-password --region eu-west-1) | docker login --username AWS --password-stdin ${REPOSITORY_URL%/*}
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - export DOCKER_BUILDKIT=1
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo Building the Docker image for $PROJECT_NAME...
+      - docker build --target production --cache-from $REPOSITORY_URL:latest --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg NODE_ENV=$ENVIRONMENT --tag $REPOSITORY_URL:latest --tag $REPOSITORY_URL:$IMAGE_TAG  .
+  post_build:
+    commands:
+      - echo Pushing the Docker image for $PROJECT_NAME...
+      - docker push --all-tags $REPOSITORY_URL
+      - aws ecs describe-task-definition --task-definition $TASK_DEFINITION | jq '.taskDefinition' > taskdef.json
+      - envsubst < ecs_appspec_template.yaml > appspec.yaml
+artifacts:
+  files:
+    - appspec.yaml
+    - taskdef.json
