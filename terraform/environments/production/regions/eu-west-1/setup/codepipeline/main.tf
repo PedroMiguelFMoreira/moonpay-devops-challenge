@@ -151,7 +151,7 @@ resource "aws_iam_role" "codedeploy_ecs_role" {
 }
 
 module "codebuild_security_group" {
-  source = "../../../../modules/aws/security-group"
+  source = "../../../../../../modules/aws/security-group"
   scope  = "codebuild"
   name   = "default"
   vpc_id = var.vpc_id
