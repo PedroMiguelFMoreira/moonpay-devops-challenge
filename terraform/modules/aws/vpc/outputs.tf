@@ -3,5 +3,7 @@ output "vpc_id" {
 }
 
 output "public_subnets" {
-  value = aws_default_subnet.default_subnet.*.id
+  value = [
+    for subnet in aws_default_subnet.default_subnet : subnet.id
+  ]
 }
