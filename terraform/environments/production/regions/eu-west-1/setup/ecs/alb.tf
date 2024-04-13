@@ -1,5 +1,5 @@
 module "alb_external_shared" {
-  source       = "../../../../../../modules/aws/load-balancer/alb"
+  source       = "../../../../../../modules/aws/elb/alb"
   name         = "external-ecs-shared"
   vpc_id       = var.vpc_id
   internal     = false

@@ -101,13 +101,6 @@ variable vpc_cidr_block {
   description = "Cidr block of the vpc"
 }
 
-
-
-variable "config_s3_bucket_arn" {
-  description = "S3 Bucket, so that we can access configs"
-  type = string
-}
-
 variable "db_secretsmanager_secret_arn" {
   description = "Secret of the DB, so that we can have access to DB configs"
   type        = string
@@ -115,11 +108,6 @@ variable "db_secretsmanager_secret_arn" {
 
 variable "db_security_group_id" {
   description = "Security group of the DB, so that we can have DB access"
-  type        = string
-}
-
-variable "elasticcache_security_group_id" {
-  description = "Security group of the REDIS elasticcache, so that we can have elasticcache access"
   type        = string
 }
 
@@ -135,4 +123,4 @@ variable "ordered_placement_strategy" {
     type  = string
     field = string
   }))
-}
+}*/
