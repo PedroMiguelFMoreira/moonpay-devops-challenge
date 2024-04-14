@@ -205,63 +205,6 @@ resource "aws_codepipeline" "codepipeline" {
     }
   }
 
-  dynamic "stage" {
-    for_each = var.tags.environment == "production" ? ["1"] : []
-    content {
-      name = "Approve"
-      action {
-        category = "Approval"
-        name     = "Approval"
-        owner    = "AWS"
-        provider = "Manual"
-        version  = "1"
-      }
-    }
-  }
-
-  stage {
-    name = "Build"
-
-    dynamic "action" {
-      for_each = var.projects
-
-      content {
-        category         = "Build"
-        name             = action.value
-        owner            = "AWS"
-        provider         = "CodeBuild"
-        version          = "1"
-        input_artifacts  = ["source_output"]
-        output_artifacts = [format("build_output_%s", action.value)]
-        configuration    = {
-          ProjectName = aws_codebuild_project.codebuild_project[action.value].name
-        }
-      }
-    }
-  }
-
-  dynamic "stage" {
-    for_each = var.hasDeployStage == true ? ["Deploy"] : []
-    content {
-      name = "Deploy"
-      dynamic "action" {
-        for_each = var.projects
-        content {
-          category        = "Deploy"
-          name            = action.value
-          owner           = "AWS"
-          provider        = "ECS"
-          version         = "1"
-          input_artifacts = [format("build_output_%s", action.value)]
-          configuration   = {
-            ClusterName = var.cluster_name
-            ServiceName = format("%s-%s", var.name, action.value)
-          }
-        }
-      }
-    }
-  }
-
   tags = {
     managed_by  = "terraform"
     environment = var.tags.environment
@@ -320,6 +263,14 @@ resource "aws_codebuild_project" "codebuild_project" {
     environment_variable {
       name  = "TASK_DEFINITION"
       value = format("arn:aws:ecs:%s:%s:task-definition/%s", var.region, var.account_id, var.codebuild_variables[each.value].container_name)
+    }
+
+    dynamic "environment_variable" {
+      for_each = var.vpc.subnets
+      content {
+        name  = format("SUBNET_%s", index(var.vpc.subnets, environment_variable.value) + 1)
+        value = environment_variable.value
+      }
     }
 
     dynamic "environment_variable" {
