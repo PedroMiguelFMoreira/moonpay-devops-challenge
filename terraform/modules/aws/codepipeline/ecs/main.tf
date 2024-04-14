@@ -323,14 +323,6 @@ resource "aws_codebuild_project" "codebuild_project" {
     }
 
     dynamic "environment_variable" {
-      for_each = var.vpc.subnets
-      content {
-        name  = format("SUBNET_%s", index(var.vpc.subnets, environment_variable.value) + 1)
-        value = environment_variable.value
-      }
-    }
-
-    dynamic "environment_variable" {
       for_each = var.custom_codebuild_variables
       content {
         name  = environment_variable.key
