@@ -158,31 +158,11 @@ resource "aws_cloudwatch_log_group" "codebuild_log_group" {
 
 resource "aws_codepipeline" "codepipeline" {
   name          = format("%s", var.name)
-  pipeline_type = var.pipeline_type
   role_arn      = var.codepipeline_role_arn
 
   artifact_store {
     location = var.artifact_bucket.bucket
     type     = "S3"
-  }
-
-  dynamic trigger {
-    for_each = var.pipeline_type == "V2" ? ["1"] : []
-    content {
-      provider_type = "CodeStarSourceConnection"
-      git_configuration {
-        source_action_name = "Source"
-        push {
-          branches {
-            includes = [var.github_config.branch]
-          }
-          file_paths {
-            includes = var.github_config.file_paths.includes
-            excludes = var.github_config.file_paths.excludes
-          }
-        }
-      }
-    }
   }
 
   stage {
@@ -219,6 +199,48 @@ resource "aws_codepipeline" "codepipeline" {
     }
   }
 
+  stage {
+    name = "Build"
+
+    dynamic "action" {
+      for_each = var.projects
+
+      content {
+        category         = "Build"
+        name             = action.value
+        owner            = "AWS"
+        provider         = "CodeBuild"
+        version          = "1"
+        input_artifacts  = ["source_output"]
+        output_artifacts = [format("build_output_%s", action.value)]
+        configuration    = {
+          ProjectName = aws_codebuild_project.codebuild_project[action.value].name
+        }
+      }
+    }
+  }
+
+  dynamic "stage" {
+    for_each = var.hasDeployStage == true ? ["Deploy"] : []
+    content {
+      name = "Deploy"
+      dynamic "action" {
+        for_each = var.projects
+        content {
+          category        = "Deploy"
+          name            = action.value
+          owner           = "AWS"
+          provider        = "ECS"
+          version         = "1"
+          input_artifacts = [format("build_output_%s", action.value)]
+          configuration   = {
+            ClusterName = var.cluster_name
+            ServiceName = format("%s-%s", var.name, action.value)
+          }
+        }
+      }
+    }
+  }
 
   tags = {
     managed_by  = "terraform"

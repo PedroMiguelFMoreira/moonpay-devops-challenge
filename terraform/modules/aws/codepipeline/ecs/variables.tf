@@ -3,11 +3,6 @@ variable "name" {
   type        = string
 }
 
-variable "pipeline_type" {
-  type    = string
-  default = "V1"
-}
-
 variable "projects" {
   description = "The projects that will be built and deployed in the codepipeline"
   type        = list(string)
