@@ -110,6 +110,11 @@ variable "ordered_placement_strategy" {
   }))
 }
 
+variable "rds_security_group_id" {
+  description = "Security group of the DB, so that we can have DB access"
+  type        = string
+}
+
 /*
 variable vpc_cidr_block {
   description = "Cidr block of the vpc"
@@ -120,8 +125,4 @@ variable "db_secretsmanager_secret_arn" {
   type        = string
 }
 
-variable "db_security_group_id" {
-  description = "Security group of the DB, so that we can have DB access"
-  type        = string
-}
 */

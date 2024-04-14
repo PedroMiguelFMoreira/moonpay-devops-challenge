@@ -97,3 +97,40 @@ module "moonpay_pipeline" {
     security_group_ids = [var.codebuild_security_group_id]
   }
 }
+
+resource "aws_security_group_rule" "ec2_rds_group_rule" {
+  for_each                 = local.projects
+  type                     = "ingress"
+  description              = module.moonpay[each.value["name"]].ec2_security_group.security_group_name
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = var.rds_security_group_id
+  source_security_group_id = module.moonpay[each.value["name"]].ec2_security_group.security_group_id
+  prefix_list_ids          = []
+}
+
+resource "aws_security_group_rule" "sonarqube_alb_group_rule" {
+  for_each          = local.projects
+  type              = "ingress"
+  description       = module.moonpay[each.value["name"]].container.name
+  from_port         = local.projects[each.value["name"]]["alb_port"]
+  to_port           = local.projects[each.value["name"]]["alb_port"]
+  protocol          = "tcp"
+  # cidr_blocks       = var.vpc_cidr_block
+  cidr_blocks       = ["0.0.0.0/0"]
+  prefix_list_ids   = []
+  security_group_id = var.alb_security_group.security_group_id
+}
+
+# access to alb
+resource "aws_security_group_rule" "alb_ec2_sonarqube_group_rule" {
+  for_each                 = local.projects
+  type                     = "ingress"
+  description              = var.alb_security_group.security_group_name
+  from_port                = local.projects[each.value["name"]]["container_port"]
+  to_port                  = local.projects[each.value["name"]]["container_port"]
+  protocol                 = "tcp"
+  source_security_group_id = var.alb_security_group.security_group_id
+  security_group_id        = module.moonpay[each.value["name"]].ec2_security_group.security_group_id
+}

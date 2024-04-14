@@ -21,9 +21,7 @@ locals {
       secret         = {
         description = "Configuration for moonpay api"
         values      = {
-          POSTGRES_USER: "postgres"
-          POSTGRES_PASSWORD: "postgres"
-          POSTGRES_DB: "currencies"
+          POSTGRES_PRISMA_URL: "postgres://postgres:postgres@postgres:5432/currencies?schema=public"
         }
       }
     }

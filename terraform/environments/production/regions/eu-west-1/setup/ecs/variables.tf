@@ -54,25 +54,7 @@ variable "github_connection_arn" {
   type        = string
 }
 
-/*
-
-variable vpc_cidr_block {
-  description = "Cidr block of the vpc"
-  type        = list(string)
-}
-
-variable "nat_gateway_public_ipv4" {
-  description = "IP of the network's NAT Gateway"
-  type        = string
-}
-
-variable "ebs_kms_key_arn" {
-  description = "EBS KMS key arn"
-  type        = string
-}
-
-variable "rds_security_group_id" {
+variable "moonpay_rds_security_group_id" {
   description = "Security group of the RDS"
   type        = string
 }
-*/
