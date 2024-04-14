@@ -27,7 +27,7 @@ module "moonpay" {
   }
   desired_count   = each.value["desired_count"]
   image_url       = format("%s.dkr.ecr.%s.amazonaws.com/%s_%s", var.account_id, var.region, var.application_name, each.value["name"])
-  inline_policies = concat([
+  inline_policies = [
     {
       name      = "secrets"
       version   = "2012-10-17"
@@ -36,12 +36,12 @@ module "moonpay" {
           Effect   = "Allow"
           Action   = ["secretsmanager:GetSecretValue"]
           Resource = [
-            module.moonpay_secretsmanager.arn
+            module.moonpay_secretsmanager[each.key].arn
           ]
         }
       ]
     },
-  ], each.value["permissions"])
+  ]
   memory                     = each.value["memory"]
   name                       = format("%s-%s", var.application_name, each.value["name"])
   ordered_placement_strategy = var.ordered_placement_strategy
