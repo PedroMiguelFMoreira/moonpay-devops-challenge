@@ -21,6 +21,7 @@ module "moonpay" {
   }
   ordered_placement_strategy = local.ordered_placement_strategy.pack_cpu
   projects                   = local.applications.moonpay.projects
+  rds_security_group_id      = var.moonpay_rds_security_group_id
   region                     = var.region
   subnets                    = var.public_subnets
   tags                       = var.tags
