@@ -96,6 +96,20 @@ variable "tags" {
   })
 }
 
+variable "capacity_provider_strategies" {
+  type = list(object({
+    capacity_provider = string
+    weight            = number
+  }))
+}
+
+variable "ordered_placement_strategy" {
+  type = list(object({
+    type  = string
+    field = string
+  }))
+}
+
 /*
 variable vpc_cidr_block {
   description = "Cidr block of the vpc"
@@ -110,17 +124,4 @@ variable "db_security_group_id" {
   description = "Security group of the DB, so that we can have DB access"
   type        = string
 }
-
-variable "capacity_provider_strategies" {
-  type = list(object({
-    capacity_provider = string
-    weight            = number
-  }))
-}
-
-variable "ordered_placement_strategy" {
-  type = list(object({
-    type  = string
-    field = string
-  }))
-}*/
+*/
