@@ -157,8 +157,8 @@ resource "aws_cloudwatch_log_group" "codebuild_log_group" {
 }
 
 resource "aws_codepipeline" "codepipeline" {
-  name          = format("%s", var.name)
-  role_arn      = var.codepipeline_role_arn
+  name     = format("%s", var.name)
+  role_arn = var.codepipeline_role_arn
 
   artifact_store {
     location = var.artifact_bucket.bucket
@@ -220,23 +220,22 @@ resource "aws_codepipeline" "codepipeline" {
     }
   }
 
-  dynamic "stage" {
-    for_each = var.hasDeployStage == true ? ["Deploy"] : []
-    content {
-      name = "Deploy"
-      dynamic "action" {
-        for_each = var.projects
-        content {
-          category        = "Deploy"
-          name            = action.value
-          owner           = "AWS"
-          provider        = "ECS"
-          version         = "1"
-          input_artifacts = [format("build_output_%s", action.value)]
-          configuration   = {
-            ClusterName = var.cluster_name
-            ServiceName = format("%s-%s", var.name, action.value)
-          }
+  stage {
+    name = "Deploy"
+
+    dynamic "action" {
+      for_each = var.projects
+
+      content {
+        category        = "Deploy"
+        name            = action.value
+        owner           = "AWS"
+        provider        = "ECS"
+        version         = "1"
+        input_artifacts = [format("build_output_%s", action.value)]
+        configuration   = {
+          ClusterName = var.cluster_name
+          ServiceName = format("%s-%s", var.name, action.value)
         }
       }
     }
