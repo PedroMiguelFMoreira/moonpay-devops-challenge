@@ -17,7 +17,7 @@ module "db_instance_security_group" {
 }
 
 resource "aws_db_instance" "db_instance" {
-  allocated_storage           = "10"
+  allocated_storage           = "30"
   allow_major_version_upgrade = false
   apply_immediately           = false
   auto_minor_version_upgrade  = true
