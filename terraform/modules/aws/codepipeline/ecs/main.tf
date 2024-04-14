@@ -310,7 +310,7 @@ resource "aws_codebuild_project" "codebuild_project" {
       value = aws_ecr_repository.ecr_repository[each.value].repository_url
     }
 
-    dynamic environment_variable {
+    dynamic "environment_variable" {
       for_each = var.codebuild_variables[each.value]
       content {
         name  = upper(environment_variable.key)
@@ -322,11 +322,10 @@ resource "aws_codebuild_project" "codebuild_project" {
       value = format("arn:aws:ecs:%s:%s:task-definition/%s", var.region, var.account_id, var.codebuild_variables[each.value].container_name)
     }
 
-    dynamic environment_variable {
+    dynamic "environment_variable" {
       for_each = var.vpc.subnets
       content {
-        name  = format("SUBNET_%s",
-          index(var.vpc.subnets, environment_variable.value) + 1)
+        name  = format("SUBNET_%s", index(var.vpc.subnets, environment_variable.value) + 1)
         value = environment_variable.value
       }
     }
