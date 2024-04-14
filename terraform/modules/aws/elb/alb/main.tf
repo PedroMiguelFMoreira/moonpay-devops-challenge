@@ -10,7 +10,7 @@ resource "aws_lb" "alb" {
   name                       = format("alb-%s", var.name)
   internal                   = var.internal
   load_balancer_type         = "application"
-  security_groups            = module.alb_security_group[0].security_group_id
+  security_groups            = module.alb_security_group.security_group_id
   subnets                    = var.subnets
   enable_deletion_protection = false
   idle_timeout               = var.idle_timeout

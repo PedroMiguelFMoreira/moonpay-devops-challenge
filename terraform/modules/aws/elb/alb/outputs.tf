@@ -1,5 +1,5 @@
 output "alb_security_group" {
-  value = module.alb_security_group[0]
+  value = module.alb_security_group
 }
 
 output "alb_id" {
