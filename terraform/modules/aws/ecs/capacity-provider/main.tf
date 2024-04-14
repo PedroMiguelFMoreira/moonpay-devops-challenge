@@ -107,7 +107,7 @@ resource "aws_launch_template" "launch_template" {
   image_id      = var.ami_id
   instance_type = var.instance_type
   user_data     = base64encode(templatefile("${path.module}/init.tpl", {
-    instance_prefix = "ecs_${aws_ecs_capacity_provider.capacity_provider.name}",
+    instance_prefix = "ecs_${local.identifier}_capacity_provider",
     cluster_name    = var.cluster_name
   }))
   update_default_version = false
