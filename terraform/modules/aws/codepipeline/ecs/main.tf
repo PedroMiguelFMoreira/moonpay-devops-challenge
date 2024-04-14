@@ -205,6 +205,21 @@ resource "aws_codepipeline" "codepipeline" {
     }
   }
 
+  dynamic "stage" {
+    for_each = var.tags.environment == "production" ? ["1"] : []
+    content {
+      name = "Approve"
+      action {
+        category = "Approval"
+        name     = "Approval"
+        owner    = "AWS"
+        provider = "Manual"
+        version  = "1"
+      }
+    }
+  }
+
+
   tags = {
     managed_by  = "terraform"
     environment = var.tags.environment
