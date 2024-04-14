@@ -223,7 +223,7 @@ resource "aws_ecs_service" "ecs_service" {
   }
 
   network_configuration {
-    subnets         = var.private_subnets
+    subnets         = var.subnets
     security_groups = [
       module.ec2_security_group.security_group_id
     ]
