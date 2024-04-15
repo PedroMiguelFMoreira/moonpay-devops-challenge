@@ -24,7 +24,12 @@ services:
       - 5050:80
 
   nextjs:
-    build: .
+    #command: "pnpm run db:seed"
+    command: "pnpm run dev"
+    build:
+      context: ./
+      target: development
+      dockerfile: Dockerfile
     restart: always
     environment:
       POSTGRES_PRISMA_URL: postgres://postgres:postgres@postgres:5432/currencies?schema=public
