@@ -23,7 +23,7 @@ module "moonpay" {
   projects                   = local.applications.moonpay.projects
   rds_security_group_id      = var.moonpay_rds_security_group_id
   region                     = var.region
-  subnets                    = var.public_subnets
+  subnets                    = var.private_subnets
   tags                       = var.tags
   vpc_id                     = var.vpc_id
 }

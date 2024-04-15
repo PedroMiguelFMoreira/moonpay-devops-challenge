@@ -27,6 +27,11 @@ variable "public_subnets" {
   type        = list(string)
 }
 
+variable "private_subnets" {
+  description = "Public Subnets"
+  type        = list(string)
+}
+
 variable "codebuild_security_group_id" {
   description = "Id of the security group for codebuild"
   type        = string
