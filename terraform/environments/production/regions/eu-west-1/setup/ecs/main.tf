@@ -4,7 +4,7 @@ module "ecs_capacity_provider" {
   #	al2023-ami-ecs-hvm-2023.0.20231213-kernel-6.1-arm64
   ami_id             = "ami-0363ec71e897ecdbe"
   cluster_name       = "${var.region}-cluster"
-  instance_type      = "c7g.xlarge"
+  instance_type      = "c7g.large"
   name               = "default"
   subnets            = var.public_subnets
   vpc_id             = var.vpc_id
