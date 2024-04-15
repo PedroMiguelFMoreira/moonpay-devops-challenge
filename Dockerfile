@@ -26,6 +26,9 @@ RUN pnpm install
 COPY --from=development /usr/app/next.config.js ./
 COPY --from=development /usr/app/public ./public
 COPY --from=development /usr/app/.next ./.next
+COPY --from=development /usr/app/prisma ./prisma
+
+RUN npx prisma generate
 
 EXPOSE 3000
 
