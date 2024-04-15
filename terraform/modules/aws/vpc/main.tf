@@ -7,7 +7,7 @@ resource "aws_default_vpc" "default_vpc" {
 }
 
 resource "aws_default_subnet" "default_subnet" {
-  for_each = toset(var.public_availability_zones)
+  for_each          = toset(var.public_availability_zones)
   availability_zone = each.value
 
   tags = {
@@ -18,10 +18,10 @@ resource "aws_default_subnet" "default_subnet" {
 }
 
 resource "aws_subnet" "private_subnet" {
-  for_each = toset(keys(var.private_availability_zones))
+  for_each          = var.private_availability_zones
   availability_zone = each.key
-  cidr_block = each.value
-  tags = {
+  cidr_block        = each.value
+  tags              = {
     Name        = format("Default subnet for %s", each.key)
     environment = var.tags.environment
     managed_by  = "terraform"
@@ -65,7 +65,7 @@ resource "aws_route" "nat_gateway_route" {
 }
 
 resource "aws_route_table_association" "private_subnet_association" {
-  for_each = toset(keys(var.private_availability_zones))
+  for_each       = toset(keys(var.private_availability_zones))
   route_table_id = aws_route_table.private_subnet_rt.id
   subnet_id      = aws_subnet.private_subnet[each.key].id
 }
