@@ -31,4 +31,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD [ "pnpm", "run", "db:seed" ]
+CMD [ "pnpm", "run", "start" ]
