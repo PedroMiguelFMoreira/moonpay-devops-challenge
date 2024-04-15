@@ -33,7 +33,7 @@ module "ecs" {
   codebuild_security_group_id   = module.codepipeline.codepipeline_codebuild_security_group_id
   codedeploy_role_arn           = module.codepipeline.codepipeline_codedeploy_ecs_role_arn
   codepipeline_role_arn         = module.codepipeline.codepipeline_codepipeline_role_arn
-  github_connection_arn         = var.ssh_github
+  github_connection_arn         = module.codepipeline.codepipeline_github_connection_arn
   moonpay_rds_security_group_id = module.postgres_setup.rds_security_group_id
   public_subnets                = module.vpc.public_subnets
   region                        = local.region

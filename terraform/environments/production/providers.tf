@@ -1,6 +1,6 @@
 terraform {
   backend "remote" {
-    organization = "1worldsync"
+    organization = "moonpay-challenge"
 
     workspaces {
       name = "Production"
