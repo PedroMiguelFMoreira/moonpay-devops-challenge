@@ -8,6 +8,11 @@ variable "private_availability_zones" {
   type        = map(string)
 }
 
+variable "region" {
+  description = "AWS Region"
+  type        = string
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = object({

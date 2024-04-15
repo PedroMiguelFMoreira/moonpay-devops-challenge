@@ -1,12 +1,13 @@
 module "vpc" {
-  source             = "./../../../../modules/aws/vpc"
+  source                     = "./../../../../modules/aws/vpc"
   private_availability_zones = {
-    "eu-west-1a": "172.31.48.0/20"
-    "eu-west-1b": "172.31.64.0/20"
-    "eu-west-1c": "172.31.80.0/20"
+    eu-west-1a = "172.31.48.0/20"
+    eu-west-1b = "172.31.64.0/20"
+    eu-west-1c = "172.31.80.0/20"
   }
   public_availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  tags               = {
+  region                    = local.region
+  tags                      = {
     environment = var.environment
   }
 }

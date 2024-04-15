@@ -69,3 +69,16 @@ resource "aws_route_table_association" "private_subnet_association" {
   route_table_id = aws_route_table.private_subnet_rt.id
   subnet_id      = aws_subnet.private_subnet[each.key].id
 }
+resource "aws_vpc_endpoint" "vpc_endpoint_s3" {
+  service_name = format("com.amazonaws.%s.s3", var.region)
+  vpc_id       = aws_default_vpc.default_vpc.id
+  tags         = {
+    Name        = "S3"
+    managed_by  = "terraform"
+    environment = var.tags.environment
+  }
+}
+resource "aws_vpc_endpoint_route_table_association" "private_s3_route" {
+  route_table_id  = aws_route_table.private_subnet_rt.id
+  vpc_endpoint_id = aws_vpc_endpoint.vpc_endpoint_s3.id
+}
