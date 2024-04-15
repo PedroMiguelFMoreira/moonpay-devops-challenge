@@ -5,10 +5,7 @@ variable "public_availability_zones" {
 
 variable "private_availability_zones" {
   description = "List of private availability zones"
-  type        = map(object({
-    availability_zone = string
-    cidr              = string
-  }))
+  type        = map(string)
 }
 
 variable "tags" {
