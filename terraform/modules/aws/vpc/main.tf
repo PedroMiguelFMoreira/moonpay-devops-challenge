@@ -70,7 +70,7 @@ resource "aws_eip" "default_vpc_eip" {
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
-  subnet_id     = aws_subnet.private_subnet[element(var.public_availability_zones, 0)].id
+  subnet_id     = aws_default_subnet.default_subnet[element(var.public_availability_zones, 0)].id
   allocation_id = aws_eip.default_vpc_eip.id
   tags          = {
     Name        = "Private Subnet NAT"
