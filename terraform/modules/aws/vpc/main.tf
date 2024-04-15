@@ -26,6 +26,12 @@ resource "aws_default_route_table" "default_public_subnet_rt" {
   }
 }
 
+resource "aws_route" "internet_gateway_route" {
+  route_table_id         = aws_default_vpc.default_vpc.default_route_table_id
+  gateway_id             = data.aws_internet_gateway.default.id
+  destination_cidr_block = "0.0.0.0/0"
+}
+
 resource "aws_route_table_association" "public_subnet_association" {
   for_each       = toset(var.public_availability_zones)
   route_table_id = aws_default_route_table.default_public_subnet_rt.id
