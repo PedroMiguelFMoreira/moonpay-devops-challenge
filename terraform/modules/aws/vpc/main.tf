@@ -29,7 +29,7 @@ resource "aws_default_route_table" "default_public_subnet_rt" {
 resource "aws_route_table_association" "public_subnet_association" {
   for_each       = toset(var.public_availability_zones)
   route_table_id = aws_default_route_table.default_public_subnet_rt.id
-  subnet_id      = aws_default_subnet[each.value].default_subnet.id
+  subnet_id      = aws_default_subnet.default_subnet[each.value].id
 }
 
 resource "aws_subnet" "private_subnet" {
