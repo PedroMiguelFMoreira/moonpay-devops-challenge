@@ -11,10 +11,25 @@ resource "aws_default_subnet" "default_subnet" {
   availability_zone = each.value
 
   tags = {
-    Name        = format("Default subnet for %s", each.value)
+    Name        = format("Default Public Subnet for %s", each.value)
     environment = var.tags.environment
     managed_by  = "terraform"
   }
+}
+
+resource "aws_default_route_table" "default_public_subnet_rt" {
+  default_route_table_id = aws_default_vpc.default_vpc.default_route_table_id
+  tags   = {
+    Name        = "Public Subnet RT"
+    managed_by  = "terraform"
+    environment = var.tags.environment
+  }
+}
+
+resource "aws_route_table_association" "private_subnet_association" {
+  for_each       = toset(keys(var.public_availability_zones))
+  route_table_id = aws_default_route_table.default_public_subnet_rt.id
+  subnet_id      = aws_default_subnet[each.key].default_subnet.id
 }
 
 resource "aws_subnet" "private_subnet" {
@@ -22,7 +37,7 @@ resource "aws_subnet" "private_subnet" {
   availability_zone = each.key
   cidr_block        = each.value
   tags              = {
-    Name        = format("Default subnet for %s", each.key)
+    Name        = format("Private Subnet for %s", each.key)
     environment = var.tags.environment
     managed_by  = "terraform"
   }
@@ -69,6 +84,7 @@ resource "aws_route_table_association" "private_subnet_association" {
   route_table_id = aws_route_table.private_subnet_rt.id
   subnet_id      = aws_subnet.private_subnet[each.key].id
 }
+
 resource "aws_vpc_endpoint" "vpc_endpoint_s3" {
   service_name = format("com.amazonaws.%s.s3", var.region)
   vpc_id       = aws_default_vpc.default_vpc.id
