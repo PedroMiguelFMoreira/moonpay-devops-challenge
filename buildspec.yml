@@ -26,7 +26,7 @@ phases:
       - echo Pushing the Docker image for $PROJECT_NAME...
       - docker push --all-tags $REPOSITORY_URL
       - aws ecs describe-task-definition --task-definition $TASK_DEFINITION | jq '.taskDefinition' > taskdef.json
-      - envsubst < ecs_appspec_template.yaml > appspec.yaml
+      - envsubst < appspec_template.yaml > appspec.yaml
 artifacts:
   files:
     - appspec.yaml
