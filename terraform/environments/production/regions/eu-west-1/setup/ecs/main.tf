@@ -6,7 +6,7 @@ module "ecs_capacity_provider" {
   cluster_name       = "${var.region}-cluster"
   instance_type      = "c7g.large"
   name               = "default"
-  subnets            = var.public_subnets
+  subnets            = var.private_subnets
   vpc_id             = var.vpc_id
   tags               = var.tags
 }
