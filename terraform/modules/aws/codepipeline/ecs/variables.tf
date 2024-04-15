@@ -80,7 +80,7 @@ variable "custom_codebuild_compute_type" {
 variable "custom_codebuild_image" {
   description = "Custom Codebuild image"
   type        = string
-  default     = "aws/codebuild/amazonlinux2-aarch64-standard:2.0"
+  default     = "aws/codebuild/amazonlinux2-aarch64-standard:3.0"
 }
 
 variable "custom_codebuild_type" {
